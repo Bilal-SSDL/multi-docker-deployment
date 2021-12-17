@@ -1,0 +1,24 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t bilal5528/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run bilal5528/react-test npm test
+
+after_success:
+  - docker build -t bilal5528/multi-client ./client
+  - docker build -t bilal5528/multi-nginx ./nginx
+  - docker build -t bilal5528/multi-worker ./worker
+  - docker build -t bilal5528/multi-server ./server
+# Login to docker cli
+#Take above images and push them to dockerhub
+
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+  - docker push bilal5528/multi-client
+  - docker push bilal5528/multi-nginx
+  - docker push bilal5528/multi-server
+  - docker push bilal5528/multi-worker
