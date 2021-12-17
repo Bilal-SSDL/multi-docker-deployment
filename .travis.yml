@@ -6,7 +6,7 @@ before_install:
   - docker build -t bilal5528/react-test -f ./client/Dockerfile.dev ./client
 
 script:
-  - docker run bilal5528/react-test npm test
+  - docker run -e CI=true bilal5528/react-test npm test
 
 after_success:
   - docker build -t bilal5528/multi-client ./client
